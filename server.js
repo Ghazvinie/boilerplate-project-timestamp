@@ -26,34 +26,53 @@ app.get("/api/hello", function (req, res) {
 
 app.get('/api', (req, res) => {
   const date = new Date();
-  res.json({ unix: date.getTime(), utc: date.toUTCString() });
+  res.json({ "unix": date.getTime(), "utc": date.toUTCString() });
 });
 
 app.get('/api/:date', (req, res) => {
-  const reqDate = req.params.date;
+  // Get req date
+  let reqDate = req.params.date;
+console.log(reqDate.length)
+
+  // Check if it is a number
   const isNum = parseInt(reqDate);
+  console.log(isNum)
   let date;
 
+
   if (!isNaN(isNum)){
+      // It is a number
     date = new Date(parseInt(reqDate));
+
+    // Test if invalid
     if (date == 'Invalid Date'){
       res.json({ error: 'Invalid Date' });
       return;
     }
-    res.json({ unix: date.getTime(), utc: date.toUTCString() });
+
+    // Send json
+    res.json({ unix: date.valueOf(), utc: date.toUTCString() });
   } else {
+
+    // It is a string
+    if (reqDate.length === 10){
+      console.log('hi')
+      reqDate = reqDate.split('-');
+      date = new Date (reqDate[0], reqDate[1] - 1, reqDate[2]);
+      res.json({ unix: date.valueOf(), utc: date.toUTCString() });
+      return;
+    }
     date = new Date(reqDate);
+
+    // Test if invalid
     if (date == 'Invalid Date'){
       res.json({ error: 'Invalid Date' });
       return;
     }
-    res.json({ unix: date.getTime(), utc: date.toUTCString() });
+
+    // Send json
+    res.json({ unix: date.valueOf(), utc: date.toUTCString() });
   }
-
-
-
-
-  
 });
 
 

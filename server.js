@@ -5,7 +5,7 @@
 const express = require('express');
 const app = express();
 
-// Reruire dateMaker
+// Require dateMaker
 const dateMaker = require('./dateMaker');
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)

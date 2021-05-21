@@ -5,6 +5,9 @@
 const express = require('express');
 const app = express();
 
+// Reruire dateMaker
+const dateMaker = require('./dateMaker');
+
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
 const cors = require('cors');
@@ -29,52 +32,7 @@ app.get('/api', (req, res) => {
   res.json({ "unix": date.getTime(), "utc": date.toUTCString() });
 });
 
-app.get('/api/:date', (req, res) => {
-  // Get req date
-  let reqDate = req.params.date;
-console.log(reqDate.length)
-
-  // Check if it is a number
-  const isNum = parseInt(reqDate);
-  console.log(isNum)
-  let date;
-
-
-  if (!isNaN(isNum)){
-      // It is a number
-    date = new Date(parseInt(reqDate));
-
-    // Test if invalid
-    if (date == 'Invalid Date'){
-      res.json({ error: 'Invalid Date' });
-      return;
-    }
-
-    // Send json
-    res.json({ unix: date.valueOf(), utc: date.toUTCString() });
-  } else {
-
-    // It is a string
-    if (reqDate.length === 10){
-      console.log('hi')
-      reqDate = reqDate.split('-');
-      date = new Date (reqDate[0], reqDate[1] - 1, reqDate[2]);
-      res.json({ unix: date.valueOf(), utc: date.toUTCString() });
-      return;
-    }
-    date = new Date(reqDate);
-
-    // Test if invalid
-    if (date == 'Invalid Date'){
-      res.json({ error: 'Invalid Date' });
-      return;
-    }
-
-    // Send json
-    res.json({ unix: date.valueOf(), utc: date.toUTCString() });
-  }
-});
-
+app.use('/api/:date', dateMaker);
 
 // listen for requests :)
 const listener = app.listen(3000, function () {
